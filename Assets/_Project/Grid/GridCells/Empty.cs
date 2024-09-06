@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace GameOfLife.Grid
 {
     public class Empty : GridCell
