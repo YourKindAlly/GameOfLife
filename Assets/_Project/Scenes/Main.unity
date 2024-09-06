@@ -292,8 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSize: 10
   cellSize: 0.5
-  populatedPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b, type: 3}
-  emptyCellPrefab: {fileID: 7623825093648425748, guid: e70a3165dd1ddf34e8827d180b716ec3, type: 3}
+  inhabitedPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b, type: 3}
 --- !u!1 &1770067019
 GameObject:
   m_ObjectHideFlags: 0
