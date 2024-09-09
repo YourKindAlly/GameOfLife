@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 # Jetbrain Rider specific
 .idea/
+
+Assets/TextMesh Pro.meta
+Assets/TextMesh Pro/

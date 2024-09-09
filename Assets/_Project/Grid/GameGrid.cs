@@ -1,36 +1,53 @@
 using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 namespace GameOfLife.Grid
 {
     public class GameGrid : MonoBehaviour
     {
+        private int generationTicks;
+        [SerializeField] private TMP_Text generationText;
+        [SerializeField] private float tickTime = 1;
+        [SerializeField] private float tickInterval = 0.1f;
+        
         [SerializeField] private int mapSize = 20;
         [SerializeField] private float cellSize;
         private GridCell[,] grid;
         
-        private List<Inhabited> inhabitedCells = new();
-        private List<GameObject> inhabitedGameObjects = new();
+        private Dictionary<Inhabited, GameObject> inhabitedCells = new();
 
         [SerializeField] private GameObject inhabitedPrefab;
+        
+        private Camera mainCamera;
+        [SerializeField] private float minCameraSize = 3;
+        [SerializeField] private float maxCameraSize = 7;
 
         private void Start()
         {
             grid = new GridCell[mapSize, mapSize];
             
+            SetUpCamera();
             GenerateGrid();
-
             StartCoroutine(GenerationTick());
         }
 
-        private GameObject SetUpCell(GameObject prefab, int x, int y)
+        private void SetUpCamera()
         {
-            GameObject cellObject = Instantiate(prefab, transform);
+            mainCamera = Camera.main;
             
+            float mapSizeInUnits = mapSize * cellSize;
+            mainCamera.transform.position = new Vector3(mapSizeInUnits * 0.5f, mapSizeInUnits * 0.5f, -10);
+        }
+
+        private GameObject SetUpCell(int x, int y)
+        {
+            GameObject cellObject = Instantiate(inhabitedPrefab, transform);
+
+            cellObject.name = $"Inhabitable {x}, {y}";
             cellObject.transform.position = new Vector3(x, y) * cellSize;
-            cellObject.transform.localScale = new Vector3(cellSize, cellSize);
+            cellObject.transform.localScale = new Vector3(cellSize, cellSize) * 0.9f;
             
             return cellObject;
         }
@@ -41,9 +58,20 @@ namespace GameOfLife.Grid
             {
                 for (int x = 0; x < mapSize; x++)
                 {
-                    grid[x, y] = UnityEngine.Random.Range(0, 5) == 0
-                        ? new Inhabited(new Vector2Int(x, y))
-                        : new Empty(new Vector2Int(x, y));
+                    if (Random.Range(0, 5) == 0)
+                    {
+                        Inhabited inhabitedCell = new(new Vector2Int(x, y));
+                        
+                        GameObject inhabitedGameObject = SetUpCell(x, y);
+                        
+                        inhabitedCells.Add(inhabitedCell, inhabitedGameObject);
+                        grid[x, y] = inhabitedCell;
+                    }
+                    else
+                    {
+                        Empty emptyCell = new(new Vector2Int(x, y));
+                        grid[x, y] = emptyCell;
+                    }
                 }
             }
         }
@@ -52,8 +80,9 @@ namespace GameOfLife.Grid
         {
             while (true)
             {
-                yield return new WaitForSeconds(1);
-                
+                yield return new WaitForSeconds(tickTime);
+
+                generationText.text = $"Generation {++generationTicks}";
                 CheckGridForNextTick();
                 UpdateGridCells();
             }
@@ -65,15 +94,14 @@ namespace GameOfLife.Grid
             {
                 int neighbours = 0;
                 
-                foreach (Inhabited otherCell in inhabitedCells)
+                foreach (KeyValuePair<Inhabited, GameObject> otherCell in inhabitedCells)
                 {
-                    if (gridCell == otherCell)
+                    if (gridCell.PositionInGrid == otherCell.Key.PositionInGrid)
                     {
                         continue;
                     }
-
-                    if (gridCell.PositionInGrid.x - otherCell.PositionInGrid.x is 1 or -1 ||
-                        gridCell.PositionInGrid.y - otherCell.PositionInGrid.y is 1 or -1)
+                    
+                    if (gridCell.PositionInGrid.x - otherCell.Key.PositionInGrid.x is 0 or 1 or -1 && gridCell.PositionInGrid.y - otherCell.Key.PositionInGrid.y is 0 or 1 or -1)
                     {
                         neighbours++;
                     }
@@ -101,27 +129,40 @@ namespace GameOfLife.Grid
                 {
                     Inhabited newCell = new(gridCell.PositionInGrid);
                     grid[gridCell.PositionInGrid.x, gridCell.PositionInGrid.y] = newCell;
-                    inhabitedCells.Add(newCell);
                     
-                    GameObject newGameObject = Instantiate(inhabitedPrefab, transform);
+                    GameObject newGameObject = SetUpCell(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y);
                     newGameObject.transform.position = new Vector2(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y) * cellSize;
-                    
-                    inhabitedGameObjects.Add(newGameObject);
+                    inhabitedCells.Add(newCell, newGameObject);
                 }
-                else if (gridCell is Inhabited { IsDying: true })
+                else if (gridCell is Inhabited { IsDying: true } dyingCell)
                 {
-                    grid[gridCell.PositionInGrid.x, gridCell.PositionInGrid.y] = new Empty(gridCell.PositionInGrid);
-
-                    for (int index = 0; index < inhabitedCells.Count; index++)
-                    {
-                        if (inhabitedGameObjects[index].transform.position == new Vector3(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y) * cellSize)
-                        {
-                            Destroy(inhabitedGameObjects[index]);
-                            inhabitedGameObjects.RemoveAt(index);
-                        }
-                    }
+                    grid[dyingCell.PositionInGrid.x, dyingCell.PositionInGrid.y] = new Empty(dyingCell.PositionInGrid);
+                    
+                    Destroy(inhabitedCells[dyingCell]);
+                    inhabitedCells.Remove(dyingCell);
                 }
             }
+        }
+        
+        private void Update()
+        {
+            ChangeCameraSize();
+            ChangeTickTime();
+        }
+
+        private void ChangeCameraSize()
+        {
+            float changeCameraSize = Input.GetAxis("Mouse ScrollWheel");
+            
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize + changeCameraSize, minCameraSize, maxCameraSize);
+        }
+
+        private void ChangeTickTime()
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+                tickTime = Mathf.Clamp(tickTime + tickInterval, 0.5f, 3);
+            else if (Input.GetKeyDown(KeyCode.A))
+                tickTime = Mathf.Clamp(tickTime - tickInterval, 0.5f, 3);
         }
     }
 }
