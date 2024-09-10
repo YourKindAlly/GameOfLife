@@ -36,9 +36,9 @@ namespace GameOfLife.Core
         
         private void ChangeTickTime()
         {
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKey(KeyCode.D))
                 tickInterval = Mathf.Clamp(tickInterval + tickStep, 0.5f, 3);
-            else if (Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKey(KeyCode.A))
                 tickInterval = Mathf.Clamp(tickInterval - tickStep, 0.5f, 3);
         }
     }
