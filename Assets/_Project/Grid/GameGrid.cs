@@ -1,62 +1,42 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 
 namespace GameOfLife.Grid
 {
     public class GameGrid : MonoBehaviour
     {
-        private int generationTicks;
-        [SerializeField] private TMP_Text generationText;
-        [SerializeField] private float tickTime = 1;
-        [SerializeField] private float tickInterval = 0.1f;
+        [field: SerializeField] public int MapSize { get; private set; } = 50;
+        [field: SerializeField] public float CellSize { get; private set; } = 0.1f;
         
-        [SerializeField] private int mapSize = 20;
-        [SerializeField] private float cellSize;
         private GridCell[,] grid;
         
         private Dictionary<Inhabited, GameObject> inhabitedCells = new();
-
         [SerializeField] private GameObject inhabitedPrefab;
-        
-        private Camera mainCamera;
-        [SerializeField] private float minCameraSize = 3;
-        [SerializeField] private float maxCameraSize = 7;
 
         private void Start()
         {
-            grid = new GridCell[mapSize, mapSize];
+            grid = new GridCell[MapSize, MapSize];
             
-            SetUpCamera();
             GenerateGrid();
-            StartCoroutine(GenerationTick());
         }
-
-        private void SetUpCamera()
-        {
-            mainCamera = Camera.main;
-            
-            float mapSizeInUnits = mapSize * cellSize;
-            mainCamera.transform.position = new Vector3(mapSizeInUnits * 0.5f, mapSizeInUnits * 0.5f, -10);
-        }
+        
 
         private GameObject SetUpCell(int x, int y)
         {
             GameObject cellObject = Instantiate(inhabitedPrefab, transform);
 
             cellObject.name = $"Inhabitable {x}, {y}";
-            cellObject.transform.position = new Vector3(x, y) * cellSize;
-            cellObject.transform.localScale = new Vector3(cellSize, cellSize) * 0.9f;
+            cellObject.transform.position = new Vector3(x, y) * CellSize;
+            cellObject.transform.localScale = new Vector3(CellSize, CellSize) * 0.9f;
             
             return cellObject;
         }
 
         private void GenerateGrid()
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < MapSize; y++)
             {
-                for (int x = 0; x < mapSize; x++)
+                for (int x = 0; x < MapSize; x++)
                 {
                     if (Random.Range(0, 5) == 0)
                     {
@@ -76,19 +56,7 @@ namespace GameOfLife.Grid
             }
         }
         
-        private IEnumerator GenerationTick()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(tickTime);
-
-                generationText.text = $"Generation {++generationTicks}";
-                CheckGridForNextTick();
-                UpdateGridCells();
-            }
-        }
-
-        private void CheckGridForNextTick()
+        public void CheckGridForNextTick()
         {
             foreach (GridCell gridCell in grid)
             {
@@ -121,7 +89,7 @@ namespace GameOfLife.Grid
             }
         }
 
-        private void UpdateGridCells()
+        public void UpdateGridCells()
         {
             foreach (GridCell gridCell in grid)
             {
@@ -131,7 +99,7 @@ namespace GameOfLife.Grid
                     grid[gridCell.PositionInGrid.x, gridCell.PositionInGrid.y] = newCell;
                     
                     GameObject newGameObject = SetUpCell(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y);
-                    newGameObject.transform.position = new Vector2(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y) * cellSize;
+                    newGameObject.transform.position = new Vector2(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y) * CellSize;
                     inhabitedCells.Add(newCell, newGameObject);
                 }
                 else if (gridCell is Inhabited { IsDying: true } dyingCell)
@@ -142,27 +110,6 @@ namespace GameOfLife.Grid
                     inhabitedCells.Remove(dyingCell);
                 }
             }
-        }
-        
-        private void Update()
-        {
-            ChangeCameraSize();
-            ChangeTickTime();
-        }
-
-        private void ChangeCameraSize()
-        {
-            float changeCameraSize = Input.GetAxis("Mouse ScrollWheel");
-            
-            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize + changeCameraSize, minCameraSize, maxCameraSize);
-        }
-
-        private void ChangeTickTime()
-        {
-            if (Input.GetKeyDown(KeyCode.D))
-                tickTime = Mathf.Clamp(tickTime + tickInterval, 0.5f, 3);
-            else if (Input.GetKeyDown(KeyCode.A))
-                tickTime = Mathf.Clamp(tickTime - tickInterval, 0.5f, 3);
         }
     }
 }
