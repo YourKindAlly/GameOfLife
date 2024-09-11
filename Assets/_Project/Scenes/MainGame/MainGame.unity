@@ -122,6 +122,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &176287116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 176287117}
+  - component: {fileID: 176287118}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &176287117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176287116}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1151905418}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &176287118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176287116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe704c306684a7e4e8da4d8ac5c4d422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 1356355235}
+  textController: {fileID: 1988423196}
+  tickController: {fileID: 1224422374}
+  cameraController: {fileID: 519420033}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1151905418}
   m_Layer: 0
-  m_Name: --- MANAGERS ---
+  m_Name: '--- MANAGERS ---'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,12 +303,13 @@ Transform:
   m_GameObject: {fileID: 1151905417}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.53896093, y: 1.1038173, z: 0.003181269}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1725643394}
   - {fileID: 1224422373}
+  - {fileID: 176287117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1196881499
@@ -376,7 +425,7 @@ GameObject:
   - component: {fileID: 1224422373}
   - component: {fileID: 1224422374}
   m_Layer: 0
-  m_Name: TickManager
+  m_Name: Ticks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -391,7 +440,7 @@ Transform:
   m_GameObject: {fileID: 1224422372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.9393277, y: 2.0853686, z: 89.99682}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -409,10 +458,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fa819e41c9dc54d95b6b65ef96aaa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 1356355235}
-  generationText: {fileID: 1988423196}
   tickInterval: 1
   tickStep: 0.1
+  minTick: 0.1
+  maxTick: 3
 --- !u!1 &1289917118
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1289917119}
   m_Layer: 0
-  m_Name: --- LAYOUT ---
+  m_Name: '--- LAYOUT ---'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -491,7 +540,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MapSize>k__BackingField: 100
   <CellSize>k__BackingField: 0.1
-  inhabitedPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b, type: 3}
+  inhabitedPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b,
+    type: 3}
 --- !u!1 &1725643391
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +604,7 @@ Transform:
   m_GameObject: {fileID: 1725643391}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.53896093, y: -1.1038173, z: -0.003181269}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -570,7 +620,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1770067020}
   m_Layer: 0
-  m_Name: --- CAMERAS ---
+  m_Name: '--- CAMERAS ---'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -653,7 +703,8 @@ MonoBehaviour:
   m_text: Generation 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0bf77b5cefa824f4587a375cbff338ca, type: 2}
-  m_sharedMaterial: {fileID: -5479602504863411434, guid: 0bf77b5cefa824f4587a375cbff338ca, type: 2}
+  m_sharedMaterial: {fileID: -5479602504863411434, guid: 0bf77b5cefa824f4587a375cbff338ca,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -749,7 +800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2099860281}
   m_Layer: 0
-  m_Name: --- UI ---
+  m_Name: '--- UI ---'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
