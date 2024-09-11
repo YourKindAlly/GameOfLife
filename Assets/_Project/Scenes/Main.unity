@@ -122,6 +122,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &176287116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 176287117}
+  - component: {fileID: 176287118}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &176287117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176287116}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1151905418}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &176287118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176287116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe704c306684a7e4e8da4d8ac5c4d422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 1356355235}
+  textController: {fileID: 1988423196}
+  tickController: {fileID: 1224422374}
+  cameraController: {fileID: 519420033}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,6 +309,7 @@ Transform:
   m_Children:
   - {fileID: 1725643394}
   - {fileID: 1224422373}
+  - {fileID: 176287117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1196881499
@@ -376,7 +425,7 @@ GameObject:
   - component: {fileID: 1224422373}
   - component: {fileID: 1224422374}
   m_Layer: 0
-  m_Name: TickManager
+  m_Name: Ticks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,10 +458,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fa819e41c9dc54d95b6b65ef96aaa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 1356355235}
-  generationText: {fileID: 1988423196}
   tickInterval: 1
   tickStep: 0.1
+  minTick: 0.1
+  maxTick: 3
 --- !u!1 &1289917118
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,8 +676,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 246.5, y: 143.5}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 264.1, y: 167.4}
+  m_SizeDelta: {x: 189.91, y: 30.33}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1988423194
 MonoBehaviour:
@@ -713,7 +762,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 11.398293, w: 16.994898}
+  m_margin: {x: 0, y: 0, z: 0.48552707, w: 1.4052153}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

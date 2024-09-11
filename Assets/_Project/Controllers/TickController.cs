@@ -4,42 +4,31 @@ using GameOfLife.Grid;
 
 namespace GameOfLife.Core
 {
-    public class TickManager : MonoBehaviour
+    public class TickController : MonoBehaviour
     {
-        [SerializeField] private GameGrid grid;
-        [SerializeField] private TextController generationText;
-        
         [SerializeField] private float tickInterval = 1;
         [SerializeField] private float tickStep = 0.1f;
-        
-        private void Start()
-        {
-            StartCoroutine(GenerationTick());
-        }
+        [SerializeField] private float minTick = 0.1f;
+        [SerializeField] private float maxTick = 3;
 
-        private IEnumerator GenerationTick()
+        public IEnumerator GenerationTick(TextController text, GameGrid grid)
         {
             while (true)
             {
                 yield return new WaitForSeconds(tickInterval);
                 
-                generationText.SetText();
+                text.SetText();
                 grid.CheckGridForNextTick();
                 grid.UpdateGridCells();
             }
         }
-
-        private void Update()
-        {
-            ChangeTickTime();
-        }
         
-        private void ChangeTickTime()
+        public void ChangeTickTime()
         {
             if (Input.GetKeyDown(KeyCode.D))
-                tickInterval = Mathf.Clamp(tickInterval + tickStep, 0.5f, 3);
+                tickInterval = Mathf.Clamp(tickInterval + tickStep, minTick, maxTick);
             else if (Input.GetKeyDown(KeyCode.A))
-                tickInterval = Mathf.Clamp(tickInterval - tickStep, 0.5f, 3);
+                tickInterval = Mathf.Clamp(tickInterval - tickStep, minTick, maxTick);
         }
     }
 }

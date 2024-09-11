@@ -32,7 +32,7 @@ namespace GameOfLife.Grid
             return cellObject;
         }
 
-        private void GenerateGrid()
+        public void GenerateGrid()
         {
             for (int y = 0; y < MapSize; y++)
             {

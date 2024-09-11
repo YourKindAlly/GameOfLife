@@ -25,13 +25,8 @@ namespace GameOfLife.Core
             float mapSizeInUnits = grid.MapSize * grid.CellSize;
             currentCamera.transform.position = new Vector3(mapSizeInUnits * 0.5f, mapSizeInUnits * 0.5f, -10);
         }
-
-        private void Update()
-        {
-            ChangeCameraSize();
-        }
         
-        private void ChangeCameraSize()
+        public void ChangeCameraSize()
         {
             float changeCameraSize = Input.GetAxis("Mouse ScrollWheel");
             
