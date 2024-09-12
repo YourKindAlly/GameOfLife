@@ -9,9 +9,10 @@ namespace GameOfLife.Grid
         [field: SerializeField] public float CellSize { get; private set; } = 0.1f;
         
         private GridCell[,] grid;
-        
-        private Dictionary<Inhabited, GameObject> inhabitedCells = new();
-        [SerializeField] private GameObject inhabitedPrefab;
+        private List<GridCell> inhabitedCells = new();
+
+        [SerializeField] private GameObject cellPrefab;
+
 
         private void Start()
         {
@@ -21,94 +22,87 @@ namespace GameOfLife.Grid
         }
         
 
-        private GameObject SetUpCell(int x, int y)
+        private GridCell SetUpCell(CellType type, int x, int y)
         {
-            GameObject cellObject = Instantiate(inhabitedPrefab, transform);
+            GameObject cellGameObject = Instantiate(cellPrefab, transform);
 
-            cellObject.name = $"Inhabitable {x}, {y}";
-            cellObject.transform.position = new Vector3(x, y) * CellSize;
-            cellObject.transform.localScale = new Vector3(CellSize, CellSize) * 0.9f;
+            GridCell cell = cellGameObject.AddComponent<GridCell>();
+            cell.CurrentType = type;
+
+            if (cell.CurrentType == CellType.Empty)
+                cell.Sprite.enabled = false;
             
-            return cellObject;
+            cellGameObject.name = $"Cell {x}, {y}";
+            cellGameObject.transform.position = new Vector3(x, y) * CellSize;
+            cellGameObject.transform.localScale = new Vector3(CellSize, CellSize) * 0.9f;
+            
+            return cell;
         }
 
-        public void GenerateGrid()
+        private void GenerateGrid()
         {
             for (int y = 0; y < MapSize; y++)
             {
                 for (int x = 0; x < MapSize; x++)
                 {
-                    if (Random.Range(0, 5) == 0)
-                    {
-                        Inhabited inhabitedCell = new(new Vector2Int(x, y));
-                        
-                        GameObject inhabitedGameObject = SetUpCell(x, y);
-                        
-                        inhabitedCells.Add(inhabitedCell, inhabitedGameObject);
-                        grid[x, y] = inhabitedCell;
-                    }
-                    else
-                    {
-                        Empty emptyCell = new(new Vector2Int(x, y));
-                        grid[x, y] = emptyCell;
-                    }
+                    GridCell cell = SetUpCell(Random.Range(0, 5) == 0 ? CellType.Inhabited : CellType.Empty, x, y);
+                    
+                    if (cell.CurrentType == CellType.Inhabited)
+                        inhabitedCells.Add(cell);
+
+                    grid[x, y] = cell;
                 }
             }
         }
         
         public void CheckGridForNextTick()
         {
-            foreach (GridCell gridCell in grid)
+            foreach (GridCell cell in grid)
             {
                 int neighbours = 0;
                 
-                foreach (KeyValuePair<Inhabited, GameObject> otherCell in inhabitedCells)
+                foreach (GridCell otherCell in inhabitedCells)
                 {
-                    if (gridCell.PositionInGrid == otherCell.Key.PositionInGrid)
+                    if (cell.positionInGrid == otherCell.positionInGrid)
                     {
                         continue;
                     }
                     
-                    if (gridCell.PositionInGrid.x - otherCell.Key.PositionInGrid.x is 0 or 1 or -1 && gridCell.PositionInGrid.y - otherCell.Key.PositionInGrid.y is 0 or 1 or -1)
+                    if (cell.positionInGrid.x - otherCell.positionInGrid.x is 0 or 1 or -1 && cell.positionInGrid.y - otherCell.positionInGrid.y is 0 or 1 or -1)
                     {
                         neighbours++;
                     }
                 }
 
-                if (gridCell is Empty emptyCell && neighbours == 3)
+                if (cell.CurrentType == CellType.Empty && neighbours == 3)
                 {
-                    emptyCell.IsInhabitable = true;
+                   cell.EnableBornState();
                 }
-                else if (gridCell is Inhabited inhabitedCell)
+                else if (cell.CurrentType == CellType.Inhabited && neighbours is < 2 or > 3)
                 {
-                    if (neighbours is < 2 or > 3)
-                    {
-                        inhabitedCell.IsDying = true;
-                    }
+                    cell.EnableDyingState();
                 }
             }
         }
 
         public void UpdateGridCells()
         {
-            foreach (GridCell gridCell in grid)
+            foreach (GridCell cell in grid)
             {
-                if (gridCell is Empty { IsInhabitable: true })
+                if (!cell.IsDying && !cell.IsBorn)
+                    return;
+                
+                if (cell.CurrentType == CellType.Inhabited)
                 {
-                    Inhabited newCell = new(gridCell.PositionInGrid);
-                    grid[gridCell.PositionInGrid.x, gridCell.PositionInGrid.y] = newCell;
-                    
-                    GameObject newGameObject = SetUpCell(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y);
-                    newGameObject.transform.position = new Vector2(gridCell.PositionInGrid.x, gridCell.PositionInGrid.y) * CellSize;
-                    inhabitedCells.Add(newCell, newGameObject);
+                    inhabitedCells.Add(cell);
                 }
-                else if (gridCell is Inhabited { IsDying: true } dyingCell)
+                else if (cell.CurrentType == CellType.Empty)
                 {
-                    grid[dyingCell.PositionInGrid.x, dyingCell.PositionInGrid.y] = new Empty(dyingCell.PositionInGrid);
-                    
-                    Destroy(inhabitedCells[dyingCell]);
-                    inhabitedCells.Remove(dyingCell);
+                    inhabitedCells.Remove(cell);
                 }
+                
+                cell.ChangeType();
+                cell.ChangeSprite();
             }
         }
     }

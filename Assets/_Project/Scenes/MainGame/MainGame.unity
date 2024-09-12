@@ -207,8 +207,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -745.12006, y: -0}
-  m_SizeDelta: {x: -1490.27, y: -730.59}
+  m_AnchoredPosition: {x: -745, y: 0}
+  m_SizeDelta: {x: -1490, y: -730}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &363648875
 MonoBehaviour:
@@ -753,7 +753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MapSize>k__BackingField: 100
   <CellSize>k__BackingField: 0.1
-  inhabitedPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b, type: 3}
+  cellPrefab: {fileID: 2373518425198052599, guid: 8c5b6b3e8bf04a843ba6651f890afc4b, type: 3}
 --- !u!1 &1725643391
 GameObject:
   m_ObjectHideFlags: 0
