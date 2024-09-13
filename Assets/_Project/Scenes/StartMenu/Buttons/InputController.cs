@@ -23,6 +23,7 @@ namespace GameOfLife
                 InputValue = int.Parse(value);
                 if (InputValue is < 10 or > 200)
                 {
+                    warningText.gameObject.SetActive(true);
                     warningText.SetText("Please enter a number between 10 and 200");
                 }
                 else

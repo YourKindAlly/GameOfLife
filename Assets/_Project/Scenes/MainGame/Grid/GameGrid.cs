@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using GameOfLife.Core;
 
 namespace GameOfLife.Grid
 {
     public class GameGrid : MonoBehaviour
     {
-        [field: SerializeField] public int MapSize { get; private set; } = 50;
         [field: SerializeField] public float CellSize { get; private set; } = 0.1f;
         
         private GridCell[,] grid;
@@ -15,7 +15,7 @@ namespace GameOfLife.Grid
 
         private void Start()
         {
-            grid = new GridCell[MapSize, MapSize];
+            grid = new GridCell[GameData.XAxis, GameData.YAxis];
             
             GenerateGrid();
         }
@@ -34,9 +34,9 @@ namespace GameOfLife.Grid
 
         public void GenerateGrid()
         {
-            for (int y = 0; y < MapSize; y++)
+            for (int y = 0; y < grid.GetLength(1); y++)
             {
-                for (int x = 0; x < MapSize; x++)
+                for (int x = 0; x < grid.GetLength(0); x++)
                 {
                     if (Random.Range(0, 5) == 0)
                     {

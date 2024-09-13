@@ -22,8 +22,9 @@ namespace GameOfLife.Core
         {
             currentCamera = GetComponent<Camera>();
             
-            float mapSizeInUnits = grid.MapSize * grid.CellSize;
-            currentCamera.transform.position = new Vector3(mapSizeInUnits * 0.5f, mapSizeInUnits * 0.5f, -10);
+            float mapSizeInUnitsX = GameData.XAxis * grid.CellSize;
+            float mapSizeInUnitsY = GameData.YAxis * grid.CellSize;
+            currentCamera.transform.position = new Vector3(mapSizeInUnitsX * 0.5f, mapSizeInUnitsY * 0.5f, -10);
         }
         
         public void ChangeCameraSize()
