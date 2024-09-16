@@ -36,3 +36,5 @@ There is nothing to break here really. It holds the other game objects.
 
 --- LAYOUT --- → Grid
 * Cell size: How big a cell is in units.
+
+![Conway's modified Game of Life is shown in a gif file.](https://imgur.com/a/KqyKxCL)
