@@ -8,7 +8,8 @@ namespace GameOfLife
     {
         [SerializeField] private TMP_Text warningText;
         public int InputValue { get; private set; }
-
+        private const int MinInputValue = 50;
+        private const int MaxInputValue = 200;
         public bool IsValid { get; private set; }
 
         public void OnValueChanged(string value)
@@ -21,10 +22,10 @@ namespace GameOfLife
             try
             {
                 InputValue = int.Parse(value);
-                if (InputValue is < 10 or > 200)
+                if (InputValue is < MinInputValue or > MaxInputValue)
                 {
                     warningText.gameObject.SetActive(true);
-                    warningText.SetText("Please enter a number between 10 and 200");
+                    warningText.SetText("Please enter a number between {0} and {1}", MinInputValue, MaxInputValue);
                 }
                 else
                 {
