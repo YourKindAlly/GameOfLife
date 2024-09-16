@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameOfLife
 {
-    public class StartNew : MonoBehaviour
+    public class StartNewButton : MonoBehaviour
     {
         public void OnClick()
         {
